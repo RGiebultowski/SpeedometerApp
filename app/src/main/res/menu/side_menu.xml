@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/speedometer"
+            android:icon="@drawable/ic_directions_car"
+            android:title="Speedometer" />
+        <item
+            android:id="@+id/dragRaceMode"
+            android:icon="@drawable/ic_directions_car"
+            android:title="Drag Race Mode" />
+        <item
+            android:id="@+id/raceMode"
+            android:icon="@drawable/ic_directions_car"
+            android:title="Race Mode" />
+    </group>
+
+    <item android:title="Profile">
+        <menu>
+            <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/login"
+                android:title="Login" />
+            <item
+                android:id="@+id/profile"
+                android:title="Profile" />
+            <item
+                android:id="@+id/logout"
+                android:title="Logout" />
+            </group>
+        </menu>
+    </item>
+</menu>
