@@ -1,14 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="Activity.AddCarFragment">
+    tools:context="Activity.AddCarFragment"
+    android:padding="20dp"
+    android:layout_marginTop="40dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="ADD CAR FRAGMENT" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Car Brand"/>
+        <EditText
+            android:id="@+id/carBrandEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Car Model"/>
+        <EditText
+            android:id="@+id/carModelEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Power HP"/>
+        <EditText
+            android:id="@+id/carPowerHP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+        <Button
+            android:id="@+id/confirmCarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Car"/>
 
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

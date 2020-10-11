@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 import com.example.speedometer.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link BestTimesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Czasy będą posortowane wedle najlepszego wyniku i modułu.
+ * Do danych winików dodamy panujące warunki atmosferyczne, datę przejazu
  */
 public class BestTimesFragment extends Fragment {
 

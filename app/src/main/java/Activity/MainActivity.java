@@ -12,10 +12,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 import com.example.speedometer.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+
+import Other.AutoData;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        bottomNavigationView.setSelectedItemId(R.id.Home);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
                 Fragment fragment = null;
                 switch (menuItem.getItemId()){
                     case R.id.AddCar:

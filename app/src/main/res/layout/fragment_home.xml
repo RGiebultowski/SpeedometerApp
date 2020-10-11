@@ -1,14 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="Activity.HomeFragment">
+    tools:context="Activity.HomeFragment"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_marginTop="40dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="HOME FRAGMENT" />
+    <ListView
+        android:id="@+id/carsListView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:text="Something"/>
+    <ListView
+        android:id="@+id/something"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</RelativeLayout>
+</LinearLayout>
