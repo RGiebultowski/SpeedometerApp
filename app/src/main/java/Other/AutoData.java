@@ -1,15 +1,14 @@
 package Other;
 
 
-import java.io.Serializable;
 
-public class AutoData implements Serializable {
+public class AutoData{
 
     private String carBrand;
     private String carModel;
-    private Integer carPowerHP;
+    private String carPowerHP;
 
-    public AutoData(String carBrand, String carModel, Integer carPowerHP) {
+    public AutoData(String carBrand, String carModel, String carPowerHP) {
         this.carBrand = carBrand;
         this.carModel = carModel;
         this.carPowerHP = carPowerHP;
@@ -31,11 +30,11 @@ public class AutoData implements Serializable {
         this.carModel = carModel;
     }
 
-    public Integer getCarPowerHP() {
+    public String getCarPowerHP() {
         return carPowerHP;
     }
 
-    public void setCarPowerHP(Integer carPowerHP) {
+    public void setCarPowerHP(String carPowerHP) {
         this.carPowerHP = carPowerHP;
     }
 }

@@ -33,16 +33,19 @@ public class SpeedometerActivity extends AppCompatActivity implements LocationLi
         setContentView(R.layout.speedometer_activity);
         // TODO: 10.10.2020 załadować widok po zezwoleniu na gps,zfreezować aplikacje?
         initView();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         } else {
             checkGPSConnection();
-        }
+        }*/
 
     }
 
     private void initView() {
         speedometerTextView = findViewById(R.id.speedometerTextView);
+        checkGPSConnection();
     }
 
 /*    @SuppressLint("MissingPermission")

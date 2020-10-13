@@ -1,11 +1,8 @@
 package Activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +10,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.speedometer.R;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import Other.AutoData;
-import Other.Utils;
+
 
 public class AddCarFragment extends Fragment{
 
-    public static final String NEW_CAR = "NEW_CAR";
+    private static final String NEW_CAR = "NEW_CAR";
+    private static final String USER_CAR = "USER_CAR";
 
     EditText carBrandEditText;
     EditText carModelEditText;
     EditText carPowerHP;
 
     Button confirmCarButton;
+
+    AutoData autoData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +53,15 @@ public class AddCarFragment extends Fragment{
         confirmCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AutoData autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), Integer.valueOf(carPowerHP.getText().toString()));
-                Bundle bundle = new Bundle();
-                String newAutoData = Utils.getGsonParser().toJson(autoData);
-                bundle.putString(NEW_CAR, newAutoData);
+                autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
+                ArrayList<AutoData> userCarList = new ArrayList<>();
+                userCarList.add(autoData);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(userCarList);
+                editor.putString(NEW_CAR, json);
+                editor.apply();
                 Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
             }
         });
