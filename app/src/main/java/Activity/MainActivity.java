@@ -67,22 +67,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment = null;
-                switch (menuItem.getItemId()){
-                    case R.id.AddCar:
-                        fragment = new AddCarFragment();
-                        break;
-                    case R.id.Home:
-                        fragment = new HomeFragment();
-                        break;
-                    case R.id.Times:
-                        fragment = new BestTimesFragment();
-                        break;
-                }
+                Fragment fragment = fragmentSwitcher(menuItem);
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 return true;
             }
         });
+    }
+
+    private Fragment fragmentSwitcher(@NonNull MenuItem menuItem) {
+        Fragment fragment = null;
+        switch (menuItem.getItemId()){
+            case R.id.AddCar:
+                fragment = new AddCarFragment();
+                break;
+            case R.id.Home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.Times:
+                fragment = new BestTimesFragment();
+                break;
+        }
+        return fragment;
     }
 
     //Zabezpieczenie przed wyłączeniem aplikacji w momencie gdy boczne menu jest otwarte.

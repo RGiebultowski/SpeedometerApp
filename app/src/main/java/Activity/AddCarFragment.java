@@ -55,6 +55,7 @@ public class AddCarFragment extends Fragment{
             public void onClick(View v) {
                 autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
                 ArrayList<AutoData> userCarList = new ArrayList<>();
+                autoData.toString();
                 userCarList.add(autoData);
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();

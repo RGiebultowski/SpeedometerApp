@@ -20,6 +20,8 @@ import com.example.speedometer.R;
 import java.util.Formatter;
 import java.util.Locale;
 
+
+
 public class SpeedometerActivity extends AppCompatActivity implements LocationListener {
 
     private TextView speedometerTextView;
@@ -31,43 +33,45 @@ public class SpeedometerActivity extends AppCompatActivity implements LocationLi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.speedometer_activity);
-        // TODO: 10.10.2020 załadować widok po zezwoleniu na gps,zfreezować aplikacje?
+
         initView();
-
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-        } else {
-            checkGPSConnection();
-        }*/
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            speedometerTextView.setText("Nie nadałeś zgody!");
+        }
     }
 
     private void initView() {
         speedometerTextView = findViewById(R.id.speedometerTextView);
-        checkGPSConnection();
     }
 
-/*    @SuppressLint("MissingPermission")
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            checkGPSConnection();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100L, 2.0f, (LocationListener) this);
-    }*/
-
-    @SuppressLint("MissingPermission")
-    private void checkGPSConnection() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
-        }
-        Toast.makeText(context, "Waiting for GPS connection...", Toast.LENGTH_LONG).show();
+        permissionGranted();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.removeUpdates(this);
+        permissionGranted();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void checkGPSConnection() {
+        permissionGranted();
+        Toast.makeText(context, "Waiting for GPS connection...", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -75,11 +79,14 @@ public class SpeedometerActivity extends AppCompatActivity implements LocationLi
         if (location !=null){
             float speed = location.getSpeed();
             float convertedSpeedToKmH = speed * 3600 / 1000;
-            Formatter formatter = new Formatter(new StringBuilder());
-            formatter.format(Locale.US, "%2.0f", convertedSpeedToKmH);
-            String strCurrentSpeed = formatter.toString();
-            strCurrentSpeed = strCurrentSpeed.replace(" ", "0");
-            speedometerTextView.setText(strCurrentSpeed + " km/h");
+            speedometerTextView.setText(convertedSpeedToKmH + " km/h");
+        }
+    }
+
+    public void permissionGranted(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
         }
     }
 

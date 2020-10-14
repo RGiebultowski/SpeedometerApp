@@ -37,4 +37,8 @@ public class AutoData{
     public void setCarPowerHP(String carPowerHP) {
         this.carPowerHP = carPowerHP;
     }
+
+    public String toString(){
+        return carBrand + " " + " " + carModel + " " + carPowerHP;
+    }
 }

@@ -60,7 +60,8 @@ public class HomeFragment extends Fragment {
         ArrayList<AutoData> newUserCarList = gson.fromJson(json, type);
         if (newUserCarList != null){
             carList = newUserCarList;
-            arrayAdapter.notifyDataSetChanged();
+            //newUserCarList.clear();
+            //arrayAdapter.notifyDataSetChanged();
         }else {
             carList = new ArrayList<>();
         }
@@ -68,27 +69,4 @@ public class HomeFragment extends Fragment {
         carsListView.setAdapter(arrayAdapter);
 
     }
-
-/*    public ArrayList<AutoData> getNewCar(ArrayList<AutoData> newCar) {
-        if (newCar != null){
-            carList = newCar;
-        }else{
-            carList = new ArrayList<>();
-        }
-        return null;
-    }*/
-
-
-
-        /*
-        setClearPref(getContext());
-    }
-
-    // TODO: 12.10.2020 uaktualnic listview danymi z addcarfragment
-    public void setClearPref(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NEW_CAR, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(NEW_CAR);
-        editor.apply();
-    }*/
 }
