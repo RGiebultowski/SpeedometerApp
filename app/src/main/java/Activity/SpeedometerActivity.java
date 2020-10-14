@@ -17,10 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.speedometer.R;
 
-import java.util.Formatter;
-import java.util.Locale;
-
-
 
 public class SpeedometerActivity extends AppCompatActivity implements LocationListener {
 
@@ -76,6 +72,7 @@ public class SpeedometerActivity extends AppCompatActivity implements LocationLi
 
     @Override
     public void onLocationChanged(Location location) {
+        // TODO: 14.10.2020 formater do predkosci. 
         if (location !=null){
             float speed = location.getSpeed();
             float convertedSpeedToKmH = speed * 3600 / 1000;
