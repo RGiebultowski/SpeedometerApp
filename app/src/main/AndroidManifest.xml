@@ -20,5 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name="Activity.SpeedometerActivity" android:configChanges="screenSize|orientation|screenLayout|navigation" />
+        <activity android:name="Activity.DragRaceModeActivity" android:configChanges="screenSize|orientation|screenLayout|navigation" />
     </application>
 </manifest>

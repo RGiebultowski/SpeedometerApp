@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.speedometer.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /*
  * Drag race mode. 2 funkcje. Bada czas przyspieszenia 0-100, 100-200, 0-200 w momencie kiedy to
@@ -31,8 +37,10 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
     private LocationManager locationManager;
 
+    private FloatingActionButton resetTimer;
+
     private TextView dragRaceSpeedometerTextView;
-    private TextView dragraceinfo;
+    private TextView dragRaceInfo;
     private TextView dragRaceTimerTextView;
     private ListView dragRaceTimesListView;
 
@@ -46,8 +54,13 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
     private int sec;
     private int min;
     private int ms;
+    private int cunter0to100 = 0;
 
     private Context context = this;
+
+    String[] ListElements = new String[]{ };
+    List<String> ListElementsArrayList;
+    ArrayAdapter<String> adapter;
 
     Runnable updateTimeThread = new Runnable() {
         @Override
@@ -70,8 +83,8 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
         initView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            dragraceinfo.setTextSize(20f);
-            dragraceinfo.setText(R.string.gpsFail);
+            dragRaceInfo.setTextSize(20f);
+            dragRaceInfo.setText(R.string.gpsFail);
         }
     }
 
@@ -79,7 +92,24 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         dragRaceSpeedometerTextView = findViewById(R.id.dragRaceSpeedometerTextView);
         dragRaceTimesListView = findViewById(R.id.dragRaceTimesListView);
         dragRaceTimerTextView = findViewById(R.id.dragRaceTimerTextView);
-        dragraceinfo = findViewById(R.id.dragraceinfo);
+        dragRaceInfo = findViewById(R.id.dragraceinfo);
+        resetTimer = findViewById(R.id.resetTimer);
+
+        ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
+
+        adapter = new ArrayAdapter<String>(context,
+                android.R.layout.simple_list_item_1,
+                ListElementsArrayList
+        );
+
+        dragRaceTimesListView.setAdapter(adapter);
+
+        resetTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopTimer();
+            }
+        });
     }
 
     @Override
@@ -122,9 +152,16 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
             if (convertedSpeedToKmH >= 15){
                 startTimer();
-            }else{
+            }else if (convertedSpeedToKmH >= 7 && convertedSpeedToKmH <= 14){
                 stopTimer();
             }
+
+            while(convertedSpeedToKmH == 100 && cunter0to100 > 1){
+                ListElementsArrayList.add(dragRaceTimerTextView.getText().toString());
+                adapter.notifyDataSetChanged();
+                cunter0to100 ++;
+            }
+            // TODO: 22.10.2020 mierzenie czasu od 100 do 200
         }
     }
 
@@ -141,7 +178,22 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
     }
 
     private void stopTimer() {
-        // TODO: 20.10.2020 zatrzymanie timera poprzez zatrzymanie sie pojazdu 
+        timeSwapBuff += timeInMs;
+        handler.removeCallbacks(updateTimeThread);
+        clearData();
+    }
+
+    private void clearData() {
+        Toast.makeText(context, "RESET!", Toast.LENGTH_LONG).show();
+        cunter0to100 = 0;
+        startTime = 0L;
+        timeInMs = 0L;
+        timeSwapBuff = 0L;
+        updateTime = 0L;
+        sec = 0;
+        min = 0;
+        ms = 0;
+        dragRaceTimerTextView.setText("00:00:000");
     }
 
     @Override

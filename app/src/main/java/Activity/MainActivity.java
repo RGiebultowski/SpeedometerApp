@@ -102,9 +102,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Intent intent;
         switch (menuItem.getItemId()){
             case R.id.speedometer:
-                Intent intent = new Intent(context, SpeedometerActivity.class);
+                intent = new Intent(context, SpeedometerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.dragRaceMode:
+                intent = new Intent(context, DragRaceModeActivity.class);
                 startActivity(intent);
                 break;
         }
