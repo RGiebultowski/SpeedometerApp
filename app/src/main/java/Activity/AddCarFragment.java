@@ -53,18 +53,22 @@ public class AddCarFragment extends Fragment{
         confirmCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
-                ArrayList<AutoData> userCarList = new ArrayList<>();
-                autoData.toString();
-                userCarList.add(autoData);
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(userCarList);
-                editor.putString(NEW_CAR, json);
-                editor.apply();
-                Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
+                getUserCar();
             }
         });
+    }
+
+    private void getUserCar() {
+        autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
+        ArrayList<AutoData> userCarList = new ArrayList<>();
+        autoData.toString();
+        userCarList.add(autoData);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(userCarList);
+        editor.putString(NEW_CAR, json);
+        editor.apply();
+        Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
     }
 }

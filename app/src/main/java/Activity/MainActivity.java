@@ -9,12 +9,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -102,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // TODO: 23.10.2020 system logowania
         Intent intent;
         switch (menuItem.getItemId()){
             case R.id.speedometer:

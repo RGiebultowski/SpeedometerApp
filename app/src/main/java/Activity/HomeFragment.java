@@ -52,7 +52,11 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         carsListView = (ListView) view.findViewById(R.id.carsListView);
-
+        addUserCar();
+        arrayAdapter = new ArrayAdapter<AutoData>(getContext(), android.R.layout.simple_list_item_1, carList);
+        carsListView.setAdapter(arrayAdapter);
+    }
+    private void addUserCar(){
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(NEW_CAR, null);
@@ -60,13 +64,12 @@ public class HomeFragment extends Fragment {
         ArrayList<AutoData> newUserCarList = gson.fromJson(json, type);
         if (newUserCarList != null){
             carList = newUserCarList;
+           /* AutoData newCar = newUserCarList.get(0);
+            carList.add(newCar);
+            arrayAdapter.notifyDataSetChanged();*/
             //newUserCarList.clear();
-            //arrayAdapter.notifyDataSetChanged();
         }else {
             carList = new ArrayList<>();
         }
-        arrayAdapter = new ArrayAdapter<AutoData>(getContext(), android.R.layout.simple_list_item_1, carList);
-        carsListView.setAdapter(arrayAdapter);
-
     }
 }
