@@ -47,7 +47,8 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
     private TextView dragRaceInfo;
     private TextView dragRaceTimerTextView;
     private ListView dragRaceTimesListView;
-    private Button symulacja;
+
+    private Button saveTimesButton;
 
     private Handler handler = new Handler();
 
@@ -61,9 +62,6 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
     private int ms;
     private int from0to100 = 0;
     private int from100to200 = 0;
-
-    private String symulacjaCzas1 = "0 - 100: " + "00:05:345";
-    private String symulacjaCzas2 = "00:35:229";
 
     private Context context = this;
 
@@ -103,7 +101,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         dragRaceTimerTextView = findViewById(R.id.dragRaceTimerTextView);
         dragRaceInfo = findViewById(R.id.dragraceinfo);
         resetTimer = findViewById(R.id.resetTimer);
-        symulacja = findViewById(R.id.Symulacja);
+        saveTimesButton = findViewById(R.id.saveTimesButton);
 
         ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
 
@@ -120,52 +118,13 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
                 stopTimer();
             }
         });
-
-        symulacja.setOnClickListener(new View.OnClickListener() {
+        
+        saveTimesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //symulacja
-
-                String[] parse0to100 = symulacjaCzas1.split(":");
-                parse0to100[1] = parse0to100[1].trim();
-                Integer mins = Integer.valueOf(parse0to100[1]);
-                Integer sec = Integer.valueOf(parse0to100[2]);
-                Integer ms = Integer.valueOf(parse0to100[3]);
-                String[] parse0to200 = symulacjaCzas2.split(":");
-                Integer mins2 = Integer.valueOf(parse0to200[0]);
-                Integer sec2 = Integer.valueOf(parse0to200[1]);
-                Integer ms2 = Integer.valueOf(parse0to200[2]);
-
-                Integer diffMins = mins2 - mins;
-                Integer diffSec = sec2 - sec;
-                Integer diffMs = ms2 - ms;
+                // TODO: 24.10.2020 zapisanie czasów próby do bazy danych i przekazanie ich do HomeFragmen
 
 
-                // TODO: 24.10.2020 obsluga - sec i poprawa ms zeby nie pokazywalo wartosci na -
-                String from100to200 = "100 - 200: " + diffMins + " " + diffSec + " " + diffMs;
-                ListElementsArrayList.add(from100to200);
-
-
-                //String diff = time2 - time;
-                //ListElementsArrayList.add("100 - 200: " + diff);
-
-               /* SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS");
-                Date d1 = null;
-                try {
-                    d1 = format.parse(symulacjaCzas1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Date d2 = null;
-                try {
-                    d2 = format.parse(symulacjaCzas2);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                long diff = d2.getTime() - d1.getTime();
-                ListElementsArrayList.add("100 - 200: " + diff);*/
-                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -221,9 +180,15 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
             // TODO: 22.10.2020 mierzenie czasu od 100 do 200
             while (convertedSpeedToKmH >= 200 && convertedSpeedToKmH <= 205 && from100to200 < 1) {
                 from100to200SetTime();
+                from0to200();
                 from100to200++;
             }
         }
+    }
+
+    private void from0to100SetTime() {
+        ListElementsArrayList.add("0 - 100: " + dragRaceTimerTextView.getText().toString());
+        adapter.notifyDataSetChanged();
     }
 
     private void from100to200SetTime() {
@@ -233,37 +198,61 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         String[] parsingTime0to200 = timeFrom0to200.split(":");
 
         parsingTime0to100[1] = parsingTime0to100[1].trim();
-        Integer min100 = Integer.valueOf(parsingTime0to100[1]);
-        Integer sec100 = Integer.valueOf(parsingTime0to100[2]);
-        Integer ms100 = Integer.valueOf(parsingTime0to100[3]);
+        int min100 = Integer.parseInt(parsingTime0to100[1]);
+        int sec100 = Integer.parseInt(parsingTime0to100[2]);
+        int ms100 = Integer.parseInt(parsingTime0to100[3]);
 
-        Integer min200 = Integer.valueOf(parsingTime0to200[0]);
-        Integer sec200 = Integer.valueOf(parsingTime0to200[1]);
-        Integer ms200 = Integer.valueOf(parsingTime0to200[2]);
+        int min200 = Integer.parseInt(parsingTime0to200[0]);
+        int sec200 = Integer.parseInt(parsingTime0to200[1]);
+        int ms200 = Integer.parseInt(parsingTime0to200[2]);
 
-        if (min100 > min200){
-
-        }else{
-            Integer diffMins = min200 - min100;
+        String formattedMs100to200;
+        if (ms100 > ms200) {
+            int ms1 = ms100 - ms200;
+            sec200 = sec200 - 1;
+            int baseMs = 999;
+            int ms100to200 = baseMs - ms1;
+            if (ms100to200 <=9){
+                formattedMs100to200 = "00" + ms100to200;
+            }else if (ms100to200 <= 99){
+                formattedMs100to200 = "0" + ms100to200;
+            }else{
+                formattedMs100to200 = String.valueOf(ms100to200);
+            }
+        } else {
+            formattedMs100to200 = String.valueOf(ms200 - ms100);
         }
 
-        if (sec100 > sec200){
-
-        }else{
-            Integer diffSec = sec200 - sec100;
+        int sec100to200;
+        String formattedSec100to200;
+        if (sec100 > sec200) {
+            int sec1 = sec100 - sec200;
+            min200 = min200 - 1;
+            int baseSec = 60;
+            sec100to200 = baseSec - sec1;
+            if (sec100to200 <= 9){
+                formattedSec100to200 = "0" + sec100to200;
+            }else{
+                formattedSec100to200 = String.valueOf(sec100to200);
+            }
+        } else {
+            sec100to200 = sec200 - sec100;
+            formattedSec100to200 = String.valueOf(sec100to200);
         }
 
-        if (ms100 > ms200){
-            
-        }else {
-            Integer diffMs = ms200 - ms100;
+        int min100to200;
+        if (min100 > min200) {
+            min100to200 = min100 - min200;
+        } else {
+            min100to200 = min200 - min100;
         }
 
+        ListElementsArrayList.add("100 - 200: " + "0"+ min100to200 + ":" + formattedSec100to200 + ":" + formattedMs100to200);
         adapter.notifyDataSetChanged();
     }
 
-    private void from0to100SetTime() {
-        ListElementsArrayList.add("0 - 100: " + dragRaceTimerTextView.getText().toString());
+    private void from0to200() {
+        ListElementsArrayList.add("0 - 200: " + dragRaceTimerTextView.getText().toString());
         adapter.notifyDataSetChanged();
     }
 

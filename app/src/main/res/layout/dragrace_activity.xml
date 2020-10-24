@@ -50,16 +50,22 @@
         android:layout_marginTop="300dp"
         android:src="@color/black"
         app:backgroundTint="@color/red" />
-    <Button
-        android:id="@+id/Symulacja"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SYMULACJA"
-        android:layout_marginTop="30dp"/>
 
     <ListView
         android:id="@+id/dragRaceTimesListView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="370dp"/>
+        android:layout_marginTop="370dp"
+        android:layout_marginBottom="120dp"/>
+    <Button
+        android:id="@+id/saveTimesButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:layout_marginTop="650dp"
+        android:layout_marginLeft="135dp"
+        android:background="@color/dark_grey"
+        android:textColor="@color/black"
+        />
+
 </RelativeLayout>
