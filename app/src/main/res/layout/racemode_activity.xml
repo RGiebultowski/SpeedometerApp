@@ -4,4 +4,56 @@
     android:layout_height="match_parent"
     android:background="@color/grey">
 
+    <TextView
+        android:id="@+id/raceModeSpeedometerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:fontFamily="@font/aldrich"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/red"
+        android:textSize="100dp"
+        android:textStyle="italic"/>
+    <TextView
+        android:id="@+id/raceModeInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:text="km/h"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:fontFamily="@font/aldrich"
+        android:textColor="@color/red"/>
+    <TextView
+        android:id="@+id/raceModeTimerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:text="00:00:000"
+        android:textSize="40dp"
+        android:textColor="@color/red"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:fontFamily="@font/aldrich"/>
+    <ListView
+        android:id="@+id/raceModeTimesListView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="330dp"
+        android:layout_marginBottom="120dp"/>
+    <Button
+        android:id="@+id/saveLapTimesButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:layout_marginTop="650dp"
+        android:layout_marginLeft="135dp"
+        android:background="@color/dark_grey"
+        android:textColor="@color/black"
+        />
+
 </RelativeLayout>

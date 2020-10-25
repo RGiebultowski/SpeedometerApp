@@ -31,6 +31,8 @@ public class RaceModeSetLapLengthActivity extends AppCompatActivity {
 
     private Button startRaceModeButton;
 
+    private static final String TRACK_LENGTH = "TRACK_LENGTH";
+
     private String[] tracks = new String[]{"Radom - Jastrząb", "Poznań - Tor główny", "Poznań - Tor Kartingowy", "Kraków",
      "Łódź", "Gdańsk - Pszczółki", "Wrocław - Krzywa", "Lublin - Ułęż", "Białystok", "Toruń", "Warszawa - Modlin", "Warszawa - Słomczyn",
      "Koszalin", "Bednary", "Borsk", "Tor Silesia Ring Karting", "Kielce", "Inny"};
@@ -167,6 +169,7 @@ public class RaceModeSetLapLengthActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateTrackLength()){
                     Intent intent = new Intent(context, RaceModeActivity.class);
+                    intent.putExtra(TRACK_LENGTH, trackLengthEditText.getText().toString());
                     startActivity(intent);
                 }
             }
