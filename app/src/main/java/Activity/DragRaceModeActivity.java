@@ -105,6 +105,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
         ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
 
+
         adapter = new ArrayAdapter<String>(context,
                 android.R.layout.simple_list_item_1,
                 ListElementsArrayList

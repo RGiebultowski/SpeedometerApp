@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
     private static final String USER_CAR = "USER_CAR";
 
 
-    private ArrayList<AutoData> carList;
+    private ArrayList<AutoData> carList = new ArrayList<AutoData>();
     private ArrayAdapter<AutoData> arrayAdapter;
     private ListView carsListView;
 
@@ -52,23 +52,27 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         carsListView = (ListView) view.findViewById(R.id.carsListView);
-        addUserCar();
         arrayAdapter = new ArrayAdapter<AutoData>(getContext(), android.R.layout.simple_list_item_1, carList);
+        addUserCar();
         carsListView.setAdapter(arrayAdapter);
     }
-    private void addUserCar(){
+
+    private void addUserCar() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(NEW_CAR, null);
-        Type type = new TypeToken<ArrayList<AutoData>>() {}.getType();
+        Type type = new TypeToken<ArrayList<AutoData>>() {
+        }.getType();
         ArrayList<AutoData> newUserCarList = gson.fromJson(json, type);
-        if (newUserCarList != null){
-            carList = newUserCarList;
-           /* AutoData newCar = newUserCarList.get(0);
+        if (newUserCarList != null) {
+            /*carList = newUserCarList;*/
+            AutoData newCar = newUserCarList.get(0);
             carList.add(newCar);
-            arrayAdapter.notifyDataSetChanged();*/
-            //newUserCarList.clear();
-        }else {
+            if (carList != null){
+                arrayAdapter.notifyDataSetChanged();
+            }
+            newUserCarList.clear();
+        } else {
             carList = new ArrayList<>();
         }
     }

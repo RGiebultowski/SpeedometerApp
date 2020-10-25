@@ -3,11 +3,13 @@ package Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,10 @@ public class AddCarFragment extends Fragment{
     EditText carModelEditText;
     EditText carPowerHP;
 
+    TextView carBrandTextView;
+    TextView carModelTextView;
+    TextView carPowerHPTextView;
+
     Button confirmCarButton;
 
     AutoData autoData;
@@ -45,15 +51,48 @@ public class AddCarFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        carBrandTextView = (TextView) view.findViewById(R.id.carBrandTextView);
+        carModelTextView = (TextView) view.findViewById(R.id.carModelTextView);
+        carPowerHPTextView = (TextView) view.findViewById(R.id.carPowerHPTextView);
+
         carBrandEditText = (EditText) view.findViewById(R.id.carBrandEditText);
         carModelEditText = (EditText) view.findViewById(R.id.carModelEditText);
         carPowerHP = (EditText) view.findViewById(R.id.carPowerHP);
+
         confirmCarButton = (Button) view.findViewById(R.id.confirmCarButton);
 
         confirmCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserCar();
+                if (validateCarBrand() && validateCarModel() && validateCarPowerHP()){
+                    getUserCar();
+                }
+
+            }
+        });
+
+        carBrandEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus == false){
+                    validateCarBrand();
+                }
+            }
+        });
+        carModelEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus == false){
+                    validateCarModel();
+                }
+            }
+        });
+        carPowerHP.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus == false){
+                    validateCarPowerHP();
+                }
             }
         });
     }
@@ -70,5 +109,41 @@ public class AddCarFragment extends Fragment{
         editor.putString(NEW_CAR, json);
         editor.apply();
         Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
+    }
+
+    private boolean validateCarBrand() {
+        if (TextUtils.isEmpty(carBrandEditText.getText().toString())){
+            carBrandTextView.setText("Car Brand must be added!");
+            carBrandTextView.setTextColor(getResources().getColor(R.color.red));
+            return false;
+        }else {
+            carBrandTextView.setText("Car Brand");
+            carBrandTextView.setTextColor(getResources().getColor(R.color.black));
+        }
+        return true;
+    }
+
+    private boolean validateCarPowerHP() {
+        if (TextUtils.isEmpty(carPowerHP.getText().toString())){
+            carPowerHPTextView.setText("Car Power HP must be added!");
+            carPowerHPTextView.setTextColor(getResources().getColor(R.color.red));
+            return false;
+        }else {
+            carPowerHPTextView.setText("Car Power HP");
+            carPowerHPTextView.setTextColor(getResources().getColor(R.color.black));
+        }
+        return true;
+    }
+
+    private boolean validateCarModel() {
+        if (TextUtils.isEmpty(carModelEditText.getText().toString())){
+            carModelTextView.setText("Car Model must be added!");
+            carModelTextView.setTextColor(getResources().getColor(R.color.red));
+            return false;
+        }else {
+            carModelTextView.setText("Car Model");
+            carModelTextView.setTextColor(getResources().getColor(R.color.black));
+        }
+        return true;
     }
 }

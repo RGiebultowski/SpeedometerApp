@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="Activity.AddCarFragment"
-    android:padding="20dp"
-    android:background="@color/grey">
+    android:background="@color/grey"
+    android:orientation="vertical"
+    android:padding="20dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,42 +13,42 @@
         android:layout_marginTop="40dp">
 
         <TextView
-            android:id="@+id/carBrandTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Car Brand"
+            android:text="Track Name"
             android:textColor="@color/black"/>
-        <EditText
-            android:id="@+id/carBrandEditText"
+        <Spinner
+            android:id="@+id/trackNameSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="55dp"
+            android:textAlignment="center"/>
         <TextView
-            android:id="@+id/carModelTextView"
+            android:id="@+id/trackLengthTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Car Model"
+            android:text="Track Lenght in meters"
             android:textColor="@color/black"/>
         <EditText
-            android:id="@+id/carModelEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/carPowerHPTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Power HP"
-            android:textColor="@color/black"/>
-        <EditText
-            android:id="@+id/carPowerHP"
+            android:id="@+id/trackLengthEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
-        <Button
-            android:id="@+id/confirmCarButton"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Car"
+            android:text="Choose Your Car"
+            android:textColor="@color/black"/>
+        <Spinner
+            android:id="@+id/chooseCarSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"/>
+        <Button
+            android:id="@+id/startRaceModeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="START"
             android:background="@color/dark_grey"/>
-
     </LinearLayout>
+
+
 </LinearLayout>

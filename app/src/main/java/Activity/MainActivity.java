@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(context, DragRaceModeActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.raceMode:
+                intent = new Intent(context, RaceModeSetLapLengthActivity.class);
+                startActivity(intent);
+                break;
         }
         return true;
     }
