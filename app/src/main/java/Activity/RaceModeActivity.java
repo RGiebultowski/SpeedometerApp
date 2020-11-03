@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -33,6 +35,7 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     private TextView raceModeSpeedometerTextView;
     private TextView raceModeInfo;
     private TextView raceModeTimerTextView;
+    private TextView distanceMeter;
     private ListView raceModeTimesListView;
 
     private Button saveLapTimesButton;
@@ -47,8 +50,13 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     private int sec;
     private int min;
     private int ms;
-    private int from0to100 = 0;
-    private int from100to200 = 0;
+
+    private double startPointLatitude;
+    private double startPointLongitude;
+    private double distance;
+    private double trackLength;
+
+    private static final String TRACK_LENGTH = "TRACK_LENGTH";
 
     private Context context = this;
 
@@ -74,6 +82,8 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.racemode_activity);
+        Bundle bundle = getIntent().getExtras();
+        trackLength = Double.parseDouble(bundle.getString(TRACK_LENGTH));
         initView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             raceModeInfo.setTextSize(20f);
@@ -86,6 +96,7 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         raceModeTimesListView = findViewById(R.id.raceModeTimesListView);
         raceModeTimerTextView = findViewById(R.id.raceModeTimerTextView);
         raceModeInfo = findViewById(R.id.raceModeInfo);
+        distanceMeter = findViewById(R.id.distanceMeter);
         saveLapTimesButton = findViewById(R.id.saveLapTimesButton);
 
         ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
@@ -97,6 +108,13 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         );
 
         raceModeTimesListView.setAdapter(adapter);
+
+        saveLapTimesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -136,11 +154,91 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     }
 
 
-
+    @SuppressLint("MissingPermission")
     @Override
     public void onLocationChanged(Location location) {
         // TODO: 25.10.2020 wziac current location i policzyc dystans pomiedy nim a starym dystansem i powiekszyc dystans
-        
+        if (location != null) {
+            float speed = location.getSpeed();
+            float convertedSpeedToKmH = speed * 3600 / 1000;
+            int nCurrentSpeed = (int) convertedSpeedToKmH;
+            String nStrCurrentSpeed = String.valueOf(nCurrentSpeed);
+            raceModeSpeedometerTextView.setText(nStrCurrentSpeed);
+            double currentLatitude = location.getLatitude();
+            double currentLongitude = location.getLongitude();
+            traveledDistance(currentLatitude, currentLongitude);
+
+            if (convertedSpeedToKmH >= 10 && convertedSpeedToKmH <= 15) {
+                startTimer();
+                setStartPoint(location);
+            } else if (convertedSpeedToKmH >= 7 && convertedSpeedToKmH <= 14) {
+                stopTimer();
+            }
+        }
+    }
+
+    private double traveledDistance(double currentLatitude, double currentLongitude) {
+        if (startPointLatitude != 0 && startPointLongitude != 0){
+            if (distance < trackLength){
+                double theta = startPointLongitude - currentLongitude;
+                distance = Math.sin(deg2rad(startPointLatitude)) * Math.sin(deg2rad(currentLatitude))
+                        + Math.cos(deg2rad(startPointLatitude)) * Math.cos(deg2rad(currentLatitude))
+                        * Math.cos(deg2rad(theta));
+                distance = Math.acos(distance);
+                distance = rad2deg(distance);
+                distance = distance * 60 * 1.1515 * 1000;
+                distanceMeter.setText(distance + " m");
+                if (distance >= trackLength){
+                    lapTime();
+                }
+            }else {
+                distance = 0;
+            }
+            return distance;
+        }
+        return distance;
+    }
+
+    private void lapTime() {
+        Toast.makeText(context, "LAP!", Toast.LENGTH_LONG).show();
+        ListElementsArrayList.add(raceModeTimerTextView.getText().toString());
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setStartPoint(Location location) {
+        startPointLatitude = location.getLatitude();
+        startPointLongitude = location.getLongitude();
+    }
+
+    private double deg2rad(double deg){
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad){
+        return (rad * 180.0 / Math.PI);
+    }
+
+    private void startTimer() {
+        startTime = SystemClock.uptimeMillis();
+        handler.postDelayed(updateTimeThread, 0);
+    }
+
+    private void stopTimer() {
+        timeSwapBuff += timeInMs;
+        handler.removeCallbacks(updateTimeThread);
+        clearData();
+    }
+
+    private void clearData() {
+        Toast.makeText(context, "RESET!", Toast.LENGTH_LONG).show();
+        startTime = 0L;
+        timeInMs = 0L;
+        timeSwapBuff = 0L;
+        updateTime = 0L;
+        sec = 0;
+        min = 0;
+        ms = 0;
+        raceModeSpeedometerTextView.setText("00:00:000");
     }
 
     @Override
