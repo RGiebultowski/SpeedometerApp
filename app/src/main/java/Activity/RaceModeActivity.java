@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,10 +22,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.speedometer.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import Other.RaceTimesHandler;
 
 public class RaceModeActivity extends AppCompatActivity implements LocationListener {
 
@@ -39,6 +42,9 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     private ListView raceModeTimesListView;
 
     private Button saveLapTimesButton;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     private Handler handler = new Handler();
 
@@ -55,6 +61,9 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     private double startPointLongitude;
     private double distance;
     private double trackLength;
+    private String car;
+    private String user;
+    private String track;
 
     private static final String TRACK_LENGTH = "TRACK_LENGTH";
 
@@ -112,7 +121,14 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         saveLapTimesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference("RaceTimes");
 
+                String nTrackLength = String.valueOf(trackLength);
+                String[] times = ListElementsArrayList.toArray(new String[0]);
+                // TODO: 08.11.2020 pobrac dane odnosnie samochodu uzytkownik i wybrany tor
+                RaceTimesHandler handler = new RaceTimesHandler(times, car, user, track, nTrackLength);
+                databaseReference.child(user).setValue(handler);
             }
         });
     }
@@ -190,6 +206,8 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
                 distanceMeter.setText(distance + " m");
                 if (distance >= trackLength){
                     lapTime();
+                    distance = 0;
+                    distanceMeter.setText(distance + "m");
                 }
             }else {
                 distance = 0;
@@ -238,7 +256,9 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         sec = 0;
         min = 0;
         ms = 0;
-        raceModeSpeedometerTextView.setText("00:00:000");
+        distance = 0;
+        raceModeTimerTextView.setText("00:00:000");
+        raceModeSpeedometerTextView.setText("0");
     }
 
     @Override

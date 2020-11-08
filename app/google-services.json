@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "902154258658",
+    "firebase_url": "https://speedometer-83160.firebaseio.com",
+    "project_id": "speedometer-83160",
+    "storage_bucket": "speedometer-83160.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902154258658:android:2c9d61e5385fefb76c36bb",
+        "android_client_info": {
+          "package_name": "com.example.speedometer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "902154258658-166vcbtjeceagsbh0tmf210606k18t78.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.speedometer",
+            "certificate_hash": "8e43ba282c5b2b7d9fe0c092bdb2fa7540fa5391"
+          }
+        },
+        {
+          "client_id": "902154258658-flo7pca17ks7kgcfmrmdivj16h65ohrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACvsT1RT2qn8kJjVmZZAyau2L2UpjSimc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902154258658-flo7pca17ks7kgcfmrmdivj16h65ohrr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

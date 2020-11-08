@@ -38,6 +38,8 @@ public class RaceModeSetLapLengthActivity extends AppCompatActivity {
      "Koszalin", "Bednary", "Borsk", "Tor Silesia Ring Karting", "Kielce", "Inny"};
     private String[] tracksLengths = new String[]{"2400", "4100", "1500", "1050", "1050", "1200", "2000", "2500", "1050", "1050", "1200",
      "1200", "1050", "2500", "1200", "3600", "2500"};
+    private String[] userCars = new String[]{"test","test2"};
+    private List<String> userCarsArrayList;
     private List<String> tracksLengthsArrayList;
 
     private ArrayAdapter tracksAdapter;
@@ -65,10 +67,11 @@ public class RaceModeSetLapLengthActivity extends AppCompatActivity {
         tracksAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, tracks);
         trackNameSpinner.setAdapter(tracksAdapter);
 // TODO: 25.10.2020 zmienic na liste aut uzytkownika
-        chooseCarAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, tracksLengths);
+        chooseCarAdapter = new ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, userCars);
         chooseCarSpinner.setAdapter(chooseCarAdapter);
 
         tracksLengthsArrayList = new ArrayList<String>(Arrays.asList(tracksLengths));
+        userCarsArrayList = new ArrayList<String>(Arrays.asList(userCars));
 
         trackNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
