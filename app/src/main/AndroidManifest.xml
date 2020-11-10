@@ -23,5 +23,7 @@
         <activity android:name="Activity.DragRaceModeActivity" android:configChanges="screenSize|orientation|screenLayout|navigation"/>
         <activity android:name="Activity.RaceModeSetLapLengthActivity" android:configChanges="screenSize|orientation|screenLayout|navigation"/>
         <activity android:name="Activity.RaceModeActivity" android:configChanges="screenSize|orientation|screenLayout|navigation"/>
+        <activity android:name="Activity.LoginActivity" android:configChanges="screenSize|orientation|screenLayout|navigation"/>
+        <activity android:name="Activity.CreateAccActivity" android:configChanges="screenSize|orientation|screenLayout|navigation"/>
     </application>
 </manifest>
