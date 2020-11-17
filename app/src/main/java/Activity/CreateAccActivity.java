@@ -25,6 +25,8 @@ import Other.CreateAccHandler;
 
 public class CreateAccActivity extends AppCompatActivity {
 
+    private static final String USR_INFO = "USER_INFO";
+
     private TextView createUserNameTextView;
     private TextView createPasswordTextView;
     private EditText createUserNameEditText;
@@ -157,7 +159,8 @@ public class CreateAccActivity extends AppCompatActivity {
         String username = createUserNameEditText.getText().toString();
         String password = createPasswordEditText.getText().toString();
         CreateAccHandler handler = new CreateAccHandler(username, password);
-        databaseReference.child(username).setValue(handler);
+        databaseReference.child(username).child(USR_INFO).setValue(handler);
         Toast.makeText(context, "Account Created!", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

@@ -126,6 +126,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
                 // TODO: 24.10.2020 zapisanie czasów próby do bazy danych i przekazanie ich do HomeFragmen
 
 
+
             }
         });
     }

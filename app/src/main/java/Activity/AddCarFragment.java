@@ -17,17 +17,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.speedometer.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import Other.AddCarToUserHandler;
 import Other.AutoData;
+import Other.LoggedAccHandler;
 
 
 public class AddCarFragment extends Fragment{
 
     private static final String NEW_CAR = "NEW_CAR";
     private static final String USER_CAR = "USER_CAR";
+
+    private String userName = null;
 
     EditText carBrandEditText;
     EditText carModelEditText;
@@ -40,6 +47,9 @@ public class AddCarFragment extends Fragment{
     Button confirmCarButton;
 
     AutoData autoData;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +70,9 @@ public class AddCarFragment extends Fragment{
         carPowerHP = (EditText) view.findViewById(R.id.carPowerHP);
 
         confirmCarButton = (Button) view.findViewById(R.id.confirmCarButton);
+
+        LoggedAccHandler handler = new LoggedAccHandler();
+        userName = handler.getLoggedUserName();
 
         confirmCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,17 +111,31 @@ public class AddCarFragment extends Fragment{
     }
 
     private void getUserCar() {
-        autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
-        ArrayList<AutoData> userCarList = new ArrayList<>();
-        autoData.toString();
-        userCarList.add(autoData);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(userCarList);
-        editor.putString(NEW_CAR, json);
-        editor.apply();
-        Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
+        if (userName == null){
+            autoData = new AutoData(carBrandEditText.getText().toString(), carModelEditText.getText().toString(), carPowerHP.getText().toString());
+            ArrayList<AutoData> userCarList = new ArrayList<>();
+            autoData.toString();
+            userCarList.add(autoData);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(USER_CAR, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(userCarList);
+            editor.putString(NEW_CAR, json);
+            editor.apply();
+            Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
+        }else {
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Users").child(userName).child("Cars");
+            String carBrand = carBrandEditText.getText().toString();
+            String carModel = carModelEditText.getText().toString();
+            String carHP = carPowerHP.getText().toString();
+            AddCarToUserHandler handler = new AddCarToUserHandler(userName, carBrand, carModel, carHP);
+            Random random = new Random();
+            int randomInt = random.nextInt(5000);
+            databaseReference.child(String.valueOf(randomInt)).setValue(handler);
+            Toast.makeText(getContext(), "Car added!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private boolean validateCarBrand() {
