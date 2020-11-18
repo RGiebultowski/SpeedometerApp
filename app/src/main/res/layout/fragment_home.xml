@@ -20,7 +20,7 @@
         android:layout_height="20dp"
         android:background="@color/black"
         android:textColor="@color/white"
-        android:text="Something"/>
+        android:text="Last Rides"/>
     <ListView
         android:id="@+id/something"
         android:layout_width="match_parent"

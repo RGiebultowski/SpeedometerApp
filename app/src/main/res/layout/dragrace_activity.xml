@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Your Car"
+        android:textColor="@color/black"/>
+    <Spinner
+        android:id="@+id/dragRaceChooseCar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"/>
 
     <TextView
         android:id="@+id/dragRaceSpeedometerTextView"
@@ -63,7 +72,7 @@
         android:layout_height="wrap_content"
         android:text="SAVE"
         android:layout_marginTop="650dp"
-        android:layout_marginLeft="135dp"
+        android:layout_marginLeft="125dp"
         android:background="@color/dark_grey"
         android:textColor="@color/black"
         />

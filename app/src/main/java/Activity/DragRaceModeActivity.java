@@ -11,18 +11,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.speedometer.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +40,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import Other.DragRaceSaveTimesHandler;
+import Other.LoggedAccHandler;
 
 /*
  * Drag race mode. 2 funkcje. Bada czas przyspieszenia 0-100, 100-200, 0-200 w momencie kiedy to
@@ -43,10 +57,15 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
     private FloatingActionButton resetTimer;
 
+    DatabaseReference databaseReference;
+    FirebaseDatabase firebaseDatabase;
+
     private TextView dragRaceSpeedometerTextView;
     private TextView dragRaceInfo;
     private TextView dragRaceTimerTextView;
     private ListView dragRaceTimesListView;
+
+    private Spinner dragRaceChooseCar;
 
     private Button saveTimesButton;
 
@@ -63,11 +82,19 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
     private int from0to100 = 0;
     private int from100to200 = 0;
 
+    private String userName = "";
+    private String from100to200time;
+    private String from0to200time;
+    private String selectedCar = "";
+
     private Context context = this;
 
     String[] ListElements = new String[]{};
     List<String> ListElementsArrayList;
     ArrayAdapter<String> adapter;
+
+    private ArrayAdapter chooseCarAdapter;
+    private ArrayList<String> userCarsArrayList = new ArrayList<String>();
 
     Runnable updateTimeThread = new Runnable() {
         @Override
@@ -99,12 +126,48 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         dragRaceSpeedometerTextView = findViewById(R.id.dragRaceSpeedometerTextView);
         dragRaceTimesListView = findViewById(R.id.dragRaceTimesListView);
         dragRaceTimerTextView = findViewById(R.id.dragRaceTimerTextView);
+        dragRaceChooseCar = findViewById(R.id.dragRaceChooseCar);
         dragRaceInfo = findViewById(R.id.dragraceinfo);
         resetTimer = findViewById(R.id.resetTimer);
         saveTimesButton = findViewById(R.id.saveTimesButton);
 
         ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
+        chooseCarAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, userCarsArrayList);
+        dragRaceChooseCar.setPrompt("Select your Car!");
 
+        LoggedAccHandler lah = new LoggedAccHandler();
+        userName = lah.getLoggedUserName();
+
+        if (userName == null){
+            userCarsArrayList.add("NO LOGGED USER");
+            chooseCarAdapter.notifyDataSetChanged();
+        }else {
+            userCarsArrayList.clear();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference reference = databaseReference.child("Users").child(userName).child("Cars");
+            Query checkUsersCar = reference.orderByChild("Cars");
+            checkUsersCar.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String carBrand = ds.child("carBrand").getValue(String.class);
+                        String carModel = ds.child("carModel").getValue(String.class);
+                        String carHP = ds.child("carHP").getValue(String.class);
+                        Log.d("TAG", carBrand + " / " + carModel + " / " + carHP);
+                        String carData = carBrand + " " + carModel + " " + carHP;
+                        userCarsArrayList.add(carData);
+                    }
+                    chooseCarAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        selectCar();
 
         adapter = new ArrayAdapter<String>(context,
                 android.R.layout.simple_list_item_1,
@@ -112,6 +175,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         );
 
         dragRaceTimesListView.setAdapter(adapter);
+        dragRaceChooseCar.setAdapter(chooseCarAdapter);
 
         resetTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,9 +187,40 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
         saveTimesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 24.10.2020 zapisanie czasów próby do bazy danych i przekazanie ich do HomeFragmen
+                if (ListElementsArrayList.isEmpty()){
+                    Toast.makeText(context, "Waiting for complete Run!.....", Toast.LENGTH_LONG).show();
+                }else{
+                    // TODO: 24.10.2020 zapisanie czasów próby do bazy danych i przekazanie ich do HomeFragment
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    databaseReference = firebaseDatabase.getReference("Users").child(userName).child("Drag");
+                    String from0to100time = ListElementsArrayList.get(0);
+                    String carData = selectedCar;
+                    if (ListElementsArrayList.size() > 1){
+                        from100to200time = ListElementsArrayList.get(1);
+                        from0to200time = ListElementsArrayList.get(2);
+                    }else {
+                        from100to200time = "no data";
+                        from0to200time = "no data";
+                    }
+                    DragRaceSaveTimesHandler dragRaceSaveTimesHandler = new DragRaceSaveTimesHandler(userName, carData, from0to100time, from0to200time, from100to200time);
+                    Random random = new Random();
+                    int randomInt = random.nextInt(500000);
+                    databaseReference.child(String.valueOf(randomInt)).setValue(dragRaceSaveTimesHandler);
+                    Toast.makeText(context, "Times Saved!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
+    private void selectCar() {
+        dragRaceChooseCar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCar = userCarsArrayList.get(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });

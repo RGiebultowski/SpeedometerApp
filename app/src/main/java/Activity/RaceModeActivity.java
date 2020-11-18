@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Other.LoggedAccHandler;
 import Other.RaceTimesHandler;
 
 public class RaceModeActivity extends AppCompatActivity implements LocationListener {
@@ -66,6 +67,8 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     private String track;
 
     private static final String TRACK_LENGTH = "TRACK_LENGTH";
+    private static final String CHOSEN_CAR = "CHOSEN_CAR";
+    private static final String CHOSEN_TRACK = "CHOSEN_TRACK";
 
     private Context context = this;
 
@@ -93,6 +96,10 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         setContentView(R.layout.racemode_activity);
         Bundle bundle = getIntent().getExtras();
         trackLength = Double.parseDouble(bundle.getString(TRACK_LENGTH));
+        car = bundle.getString(CHOSEN_CAR);
+        track = bundle.getString(CHOSEN_TRACK);
+        LoggedAccHandler lah = new LoggedAccHandler();
+        user = lah.getLoggedUserName();
         initView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             raceModeInfo.setTextSize(20f);
