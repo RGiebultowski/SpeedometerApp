@@ -25,9 +25,16 @@ import com.example.speedometer.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 import Other.LoggedAccHandler;
 import Other.RaceTimesHandler;
@@ -72,7 +79,7 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
 
     private Context context = this;
 
-    String[] ListElements = new String[]{};
+    String[] ListElements = new String[]{"00:20:123","00:28:123","00:22:123"};
     List<String> ListElementsArrayList;
     ArrayAdapter<String> adapter;
 
@@ -128,14 +135,25 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
         saveLapTimesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                databaseReference = firebaseDatabase.getReference("RaceTimes");
-
-                String nTrackLength = String.valueOf(trackLength);
-                String[] times = ListElementsArrayList.toArray(new String[0]);
-                // TODO: 08.11.2020 pobrac dane odnosnie samochodu uzytkownik i wybrany tor
-                RaceTimesHandler handler = new RaceTimesHandler(times, car, user, track, nTrackLength);
-                databaseReference.child(user).setValue(handler);
+                if (ListElementsArrayList.isEmpty()){
+                    Toast.makeText(context, "Waiting for complete Run!.....", Toast.LENGTH_LONG).show();
+                }else {
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    databaseReference = firebaseDatabase.getReference("Users").child(user).child("RaceMode");
+                    Collections.sort(ListElementsArrayList);
+                    String bestTime = ListElementsArrayList.get(0);
+                    int lapCounter = 0;
+                    for (int i = 0; i <= ListElementsArrayList.size(); i++){
+                        lapCounter = i;
+                    }
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+                    String currentDate = format.format(new Date());
+                    RaceTimesHandler rth = new RaceTimesHandler(bestTime, car, user, track, String.valueOf(trackLength), currentDate, String.valueOf(lapCounter));
+                    Random random = new Random();
+                    int randomInt = random.nextInt(500000);
+                    databaseReference.child(String.valueOf(randomInt)).setValue(rth);
+                    Toast.makeText(context, "Times Saved!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -210,7 +228,8 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
                 distance = Math.acos(distance);
                 distance = rad2deg(distance);
                 distance = distance * 60 * 1.1515 * 1000;
-                distanceMeter.setText(distance + " m");
+                DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                distanceMeter.setText(decimalFormat.format(distance) + " m");
                 if (distance >= trackLength){
                     lapTime();
                     distance = 0;

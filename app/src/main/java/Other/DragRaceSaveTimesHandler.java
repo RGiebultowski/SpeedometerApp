@@ -1,6 +1,7 @@
 package Other;
 
 public class DragRaceSaveTimesHandler {
+    private String date;
     private String userName;
     private String carData;
     private String from0to100;
@@ -11,16 +12,25 @@ public class DragRaceSaveTimesHandler {
 
     }
 
-    public DragRaceSaveTimesHandler(String userName, String carData, String from0to100, String from0to200, String from100to200) {
+    public DragRaceSaveTimesHandler(String userName, String carData, String from0to100, String from0to200, String from100to200, String date) {
         this.userName = userName;
         this.carData = carData;
         this.from0to100 = from0to100;
         this.from0to200 = from0to200;
         this.from100to200 = from100to200;
+        this.date = date;
     }
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setUserName(String userName) {

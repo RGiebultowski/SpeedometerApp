@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,19 +41,17 @@ import Other.LoggedAccHandler;
 
 public class HomeFragment extends Fragment {
 
-    // TODO: 11.10.2020 w momencie dodania nowego auta zrobic wyswietlenie jego w HomeFragment
-    /*
-     * Wcisniecie nowego auta na HomeFragment odpali okno danego auta, w nim będą wyspecjalizowane dane dotycznące konkretnego auta.
-     * Tzn. Całkowity przejechany dystans na aplikacji
-     * */
     private static final String NEW_CAR = "NEW_CAR";
     private static final String USER_CAR = "USER_CAR";
 
     private String userName = null;
 
     private ArrayList<String> carList = new ArrayList<String>();
+    private ArrayList<String> lastRides = new ArrayList<String>();
     private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> lastRidesArrayAdapter;
     private ListView carsListView;
+    private ListView lastRidesListView;
     private TextView cars;
 
     @Override
@@ -67,8 +66,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         carsListView = (ListView) view.findViewById(R.id.carsListView);
+        lastRidesListView = (ListView) view.findViewById(R.id.lastRidesListView);
         cars = (TextView) view.findViewById(R.id.cars);
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, carList);
+        lastRidesArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lastRides);
 
         LoggedAccHandler lah = new LoggedAccHandler();
         userName = lah.getLoggedUserName();
@@ -76,6 +77,9 @@ public class HomeFragment extends Fragment {
             addUserCar();
         }else {
             carList.clear();
+            lastRides.clear();
+            getRaceModeTimes();
+            getDragRaceTimes();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             DatabaseReference reference = databaseReference.child("Users").child(userName).child("Cars");
             Query checkUsersCar = reference.orderByChild("Cars");
@@ -92,7 +96,14 @@ public class HomeFragment extends Fragment {
                         String carData = carBrand + " " + carModel + " " + carHP;
                         carList.add(carData);
                     }
+                    Collections.sort(lastRides, Collections.<String>reverseOrder());
+                    if (lastRides.size()>= 9){
+                        for (int i = lastRides.size() - 1; i >= 10 ; i--){
+                            lastRides.remove(i);
+                        }
+                    }
                     arrayAdapter.notifyDataSetChanged();
+                    lastRidesArrayAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -102,6 +113,48 @@ public class HomeFragment extends Fragment {
             });
         }
         carsListView.setAdapter(arrayAdapter);
+    }
+
+    private void getDragRaceTimes() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reference = databaseReference.child("Users").child(userName).child("Drag");
+        Query checkUserDragTimes = reference.orderByChild("Drag");
+        checkUserDragTimes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String dateDrag = ds.child("date").getValue(String.class);
+                    lastRides.add(dateDrag + "\n Drag Race Time");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        lastRidesListView.setAdapter(lastRidesArrayAdapter);
+    }
+
+    private void getRaceModeTimes() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reference = databaseReference.child("Users").child(userName).child("RaceMode");
+        Query checkUserRaceTimes = reference.orderByChild("RaceMode");
+        checkUserRaceTimes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+                    String dateRace = ds.child("date").getValue(String.class);
+                    lastRides.add(dateRace + "\n Race Mode best Time");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        lastRidesListView.setAdapter(lastRidesArrayAdapter);
     }
 
     private void addUserCar() {

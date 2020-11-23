@@ -22,8 +22,10 @@
         android:textColor="@color/white"
         android:text="Last Rides"/>
     <ListView
-        android:id="@+id/something"
+        android:id="@+id/lastRidesListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"/>
 
 </LinearLayout>

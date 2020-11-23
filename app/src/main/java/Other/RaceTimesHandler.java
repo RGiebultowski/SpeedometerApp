@@ -1,30 +1,50 @@
 package Other;
 
 public class RaceTimesHandler {
-    String[] raceModeTimes;
+    String date;
+    String bestTime;
     String raceModeCar;
     String user;
     String track;
     String trackLength;
+    String lapCounter;
 
     public RaceTimesHandler(){
 
     }
 
-    public RaceTimesHandler(String[] raceModeTimes, String raceModeCar, String user, String track, String trackLength) {
-        this.raceModeTimes = raceModeTimes;
+    public RaceTimesHandler(String bestTime, String raceModeCar, String user, String track, String trackLength, String date, String lapCounter) {
+        this.bestTime = bestTime;
         this.raceModeCar = raceModeCar;
         this.user = user;
         this.track = track;
         this.trackLength = trackLength;
+        this.date = date;
+        this.lapCounter = lapCounter;
     }
 
-    public String[] getRaceModeTimes() {
-        return raceModeTimes;
+    public String getLapCounter() {
+        return lapCounter;
     }
 
-    public void setRaceModeTimes(String[] raceModeTimes) {
-        this.raceModeTimes = raceModeTimes;
+    public void setLapCounter(String lapCounter) {
+        this.lapCounter = lapCounter;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getBestTime() {
+        return bestTime;
+    }
+
+    public void setBestTime(String bestTime) {
+        this.bestTime = bestTime;
     }
 
     public String getRaceModeCar() {

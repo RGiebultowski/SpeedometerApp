@@ -38,8 +38,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import Other.DragRaceSaveTimesHandler;
@@ -89,7 +91,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
     private Context context = this;
 
-    String[] ListElements = new String[]{};
+    String[] ListElements = new String[]{"00:06:00","00:12:123","00:37:012"};
     List<String> ListElementsArrayList;
     ArrayAdapter<String> adapter;
 
@@ -195,6 +197,8 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
                     databaseReference = firebaseDatabase.getReference("Users").child(userName).child("Drag");
                     String from0to100time = ListElementsArrayList.get(0);
                     String carData = selectedCar;
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+                    String currentDate = format.format(new Date());
                     if (ListElementsArrayList.size() > 1){
                         from100to200time = ListElementsArrayList.get(1);
                         from0to200time = ListElementsArrayList.get(2);
@@ -202,7 +206,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
                         from100to200time = "no data";
                         from0to200time = "no data";
                     }
-                    DragRaceSaveTimesHandler dragRaceSaveTimesHandler = new DragRaceSaveTimesHandler(userName, carData, from0to100time, from0to200time, from100to200time);
+                    DragRaceSaveTimesHandler dragRaceSaveTimesHandler = new DragRaceSaveTimesHandler(userName, carData, from0to100time, from0to200time, from100to200time, currentDate);
                     Random random = new Random();
                     int randomInt = random.nextInt(500000);
                     databaseReference.child(String.valueOf(randomInt)).setValue(dragRaceSaveTimesHandler);
