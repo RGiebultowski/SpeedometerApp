@@ -67,6 +67,9 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
 
     private double startPointLatitude;
     private double startPointLongitude;
+    private double positionA;
+    private double positionB;
+    private double distanceBetweenAndB;
     private double distance;
     private double trackLength;
     private String car;
@@ -79,7 +82,7 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
 
     private Context context = this;
 
-    String[] ListElements = new String[]{"00:20:123","00:28:123","00:22:123"};
+    String[] ListElements = new String[]{};
     List<String> ListElementsArrayList;
     ArrayAdapter<String> adapter;
 
@@ -198,7 +201,6 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
     @SuppressLint("MissingPermission")
     @Override
     public void onLocationChanged(Location location) {
-        // TODO: 25.10.2020 wziac current location i policzyc dystans pomiedy nim a starym dystansem i powiekszyc dystans
         if (location != null) {
             float speed = location.getSpeed();
             float convertedSpeedToKmH = speed * 3600 / 1000;
@@ -211,6 +213,7 @@ public class RaceModeActivity extends AppCompatActivity implements LocationListe
 
             if (convertedSpeedToKmH >= 10 && convertedSpeedToKmH <= 15) {
                 startTimer();
+                //zmienic na liczenie i sumowanie odcinkow, bo narazie liczy od punktu startowego do obecnego w linii prostej
                 setStartPoint(location);
             } else if (convertedSpeedToKmH >= 7 && convertedSpeedToKmH <= 14) {
                 stopTimer();

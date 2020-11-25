@@ -47,12 +47,6 @@ import java.util.Random;
 import Other.DragRaceSaveTimesHandler;
 import Other.LoggedAccHandler;
 
-/*
- * Drag race mode. 2 funkcje. Bada czas przyspieszenia 0-100, 100-200, 0-200 w momencie kiedy to
- * aplikacja wykryje ruch
- *
- * Mierzenie danych w momencie gdy uzytkownik ustawi sobie "Counter"
- * */
 public class DragRaceModeActivity extends AppCompatActivity implements LocationListener {
 
     private LocationManager locationManager;
@@ -91,7 +85,7 @@ public class DragRaceModeActivity extends AppCompatActivity implements LocationL
 
     private Context context = this;
 
-    String[] ListElements = new String[]{"00:06:00","00:12:123","00:37:012"};
+    String[] ListElements = new String[]{};
     List<String> ListElementsArrayList;
     ArrayAdapter<String> adapter;
 
